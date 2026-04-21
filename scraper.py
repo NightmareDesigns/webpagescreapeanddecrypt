@@ -100,10 +100,6 @@ def _extract_title(html: str):
 
 def _extract_candidates(html: str):
     tokens = set(re.findall(r"[A-Za-z0-9%+/=_-]{8,}", html))
-    scripts = re.findall(
-        r"<script[^>]*>(.*?)</script\s*>", html, flags=re.IGNORECASE | re.DOTALL
-    )
-    tokens.update(re.findall(r"[A-Za-z0-9%+/=_-]{8,}", "\n".join(scripts)))
     return tokens
 
 
@@ -122,6 +118,9 @@ def scrape(
     timeout: int = 10,
     user_agent: str = "HeavyAutoDecryptScraper/1.0",
 ):
+    if workers < 1:
+        raise ValueError("workers must be >= 1")
+
     parsed = urlparse(start_url)
     root_netloc = parsed.netloc
 
@@ -151,7 +150,7 @@ def scrape(
 
         next_level = set()
 
-        with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        with ThreadPoolExecutor(max_workers=workers) as pool:
             future_map = {
                 pool.submit(_fetch_url, url, timeout, user_agent): url for url in batch
             }
@@ -186,7 +185,7 @@ def scrape(
                         next_level.add(absolute)
 
                 decrypted_messages = set()
-                for candidate in {html, *_extract_candidates(html)}:
+                for candidate in _extract_candidates(html):
                     for decoded in auto_decrypt(candidate):
                         if 4 <= len(decoded) <= 500:
                             decrypted_messages.add(decoded)
