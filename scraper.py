@@ -100,7 +100,9 @@ def _extract_title(html: str):
 
 def _extract_candidates(html: str):
     tokens = set(re.findall(r"[A-Za-z0-9%+/=_-]{8,}", html))
-    scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.IGNORECASE | re.DOTALL)
+    scripts = re.findall(
+        r"<script[^>]*>(.*?)</script\s*>", html, flags=re.IGNORECASE | re.DOTALL
+    )
     tokens.update(re.findall(r"[A-Za-z0-9%+/=_-]{8,}", "\n".join(scripts)))
     return tokens
 

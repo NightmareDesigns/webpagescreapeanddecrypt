@@ -5,7 +5,7 @@ Heavy-hitting auto-decrypting website scraper.
 ## Run
 
 ```bash
-python /home/runner/work/webpagescreapeanddecrypt/webpagescreapeanddecrypt/scraper.py https://example.com --max-pages 30 --max-depth 2 --workers 8
+python scraper.py https://example.com --max-pages 30 --max-depth 2 --workers 8
 ```
 
 ## What it does
@@ -18,6 +18,5 @@ python /home/runner/work/webpagescreapeanddecrypt/webpagescreapeanddecrypt/scrap
 ## Test
 
 ```bash
-cd /home/runner/work/webpagescreapeanddecrypt/webpagescreapeanddecrypt
 python -m unittest discover -s tests -v
 ```
