@@ -1,0 +1,38 @@
+name: macOS Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt and dependencies
+      run: |
+        brew install qt@6 cmake
+
+    - name: Configure CMake
+      run: |
+        cd gui
+        mkdir build
+        cd build
+        export CMAKE_PREFIX_PATH=$(brew --prefix qt@6)
+        cmake ..
+
+    - name: Build
+      run: |
+        cd gui/build
+        make
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: WebScraperGUI-macOS
+        path: WebScraperGUI
+        if-no-files-found: warn

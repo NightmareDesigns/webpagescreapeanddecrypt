@@ -30,8 +30,10 @@ endif()
 target_link_libraries(WebScraperGUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Set output directory to repository root for easy access to scraper.py
+# Use generator expression to prevent multi-config generators (e.g. Visual Studio)
+# from appending a per-configuration subdirectory (Release/, Debug/, etc.)
 set_target_properties(WebScraperGUI PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/.."
+    RUNTIME_OUTPUT_DIRECTORY "$<1:${CMAKE_SOURCE_DIR}/..>"
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
