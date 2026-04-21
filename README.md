@@ -4,8 +4,22 @@ Heavy-hitting auto-decrypting website scraper.
 
 ## Run
 
+### Command Line
+
 ```bash
 python scraper.py https://example.com --max-pages 30 --max-depth 2 --workers 8
+```
+
+### GUI Application
+
+A Qt-based C++ GUI is available for a user-friendly experience. See [gui/README.md](gui/README.md) for build instructions.
+
+```bash
+cd gui
+mkdir build && cd build
+cmake .. && make
+cd ../..
+./WebScraperGUI
 ```
 
 ## What it does
