@@ -166,8 +166,8 @@ def example_aes_decryption():
     import base64
 
     # Create some encrypted data for demonstration
-    key = b'This-is-a-32-byte-secret-key'
-    iv = b'This-is-a-16-byt'
+    key = b'0123456789abcdef0123456789abcdef'  # Exactly 32 bytes
+    iv = b'0123456789abcdef'  # Exactly 16 bytes
     plaintext = b'Secret message to decrypt!'
 
     # Encrypt

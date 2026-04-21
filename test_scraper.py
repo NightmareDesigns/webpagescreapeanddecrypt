@@ -31,8 +31,8 @@ class TestDecryptionEngine(unittest.TestCase):
 
     def test_decrypt_aes(self):
         """Test AES decryption."""
-        key = b'This-is-a-32-byte-secret-key'
-        iv = b'This-is-a-16-byt'
+        key = b'0123456789abcdef0123456789abcdef'  # Exactly 32 bytes
+        iv = b'0123456789abcdef'  # Exactly 16 bytes
         plaintext = b'Secret message!'
 
         # Encrypt
