@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-python:
+    name: Test Python Scraper
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Run tests
+      run: python -m unittest discover -s tests -v
+
+  build-gui:
+    name: Build Qt GUI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        qt-version: ['6.5.0']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ matrix.qt-version }}
+        modules: 'qtbase'
+
+    - name: Configure CMake (Unix)
+      if: runner.os != 'Windows'
+      working-directory: gui
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Configure CMake (Windows)
+      if: runner.os == 'Windows'
+      working-directory: gui
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      working-directory: gui
+      run: cmake --build build --config Release
+
+    - name: Upload artifacts (Unix)
+      if: runner.os != 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: WebScraperGUI-${{ matrix.os }}
+        path: WebScraperGUI
+
+    - name: Upload artifacts (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: WebScraperGUI-${{ matrix.os }}
+        path: WebScraperGUI.exe
